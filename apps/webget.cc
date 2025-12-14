@@ -1,3 +1,4 @@
+#include "address.hh"
 #include "debug.hh"
 #include "socket.hh"
 
@@ -5,6 +6,7 @@
 #include <iostream>
 #include <span>
 #include <string>
+#include <string_view>
 
 using namespace std;
 
@@ -12,7 +14,41 @@ namespace {
 void get_URL( const string& host, const string& path )
 {
   debug( "Function called: get_URL( \"{}\", \"{}\" )", host, path );
-  debug( "get_URL() function not yet implemented" );
+  // Use TCPSocket and Address to send an format of HTTP request to the server
+  // Create a TCPSocket: which address
+  Address local_address("0.0.0.0", 8081);
+  // 使用connect的时候，这里传host和host+path有区别吗？
+  Address peer_address(host, "http");
+
+  TCPSocket tcp_socket;
+  // listen: should client call "listen"?
+  // tcp_socket.listen();
+  // accept: should client call "accept"?
+  //TCPSocket connected_socket = tcp_socket.accept();
+  tcp_socket.bind(local_address);
+  tcp_socket.connect(peer_address);
+
+  // send: how to send the request, which function
+  // how to close the connection
+  std::vector<std::string> request = {
+    "GET " + path + " HTTP/1.1\r\n",
+    "Host: " + host + "\r\n",
+    "Connection: close\r\n",
+  };
+  tcp_socket.write(std::move(request));
+
+  // rev from server
+  // how to judge if reach the EOF of the response?
+  std::string response;
+  while (not tcp_socket.eof()) {
+    tcp_socket.read(response);
+    if (not response.empty()) {
+      debug("response: {}", response);
+      response.clear();
+    }
+  }
+  // debug( "get_URL() function not yet implemented" );
+  debug( "get_URL() function done" );
 }
 } // namespace
 
