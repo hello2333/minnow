@@ -44,7 +44,8 @@ void get_URL( const string& host, const string& path )
   while (not tcp_socket.eof()) {
     tcp_socket.read(response);
     if (not response.empty()) {
-      debug("response: {}", response);
+      // debug("{}", response);
+      cout<< response;
       response.clear();
     }
   }
