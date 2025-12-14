@@ -16,7 +16,7 @@ void get_URL( const string& host, const string& path )
   debug( "Function called: get_URL( \"{}\", \"{}\" )", host, path );
   // Use TCPSocket and Address to send an format of HTTP request to the server
   // Create a TCPSocket: which address
-  Address local_address("0.0.0.0", 8081);
+  // Address local_address("0.0.0.0", 8081);
   // 使用connect的时候，这里传host和host+path有区别吗？
   Address peer_address(host, "http");
 
@@ -25,7 +25,7 @@ void get_URL( const string& host, const string& path )
   // tcp_socket.listen();
   // accept: should client call "accept"?
   //TCPSocket connected_socket = tcp_socket.accept();
-  tcp_socket.bind(local_address);
+  // tcp_socket.bind(local_address);
   tcp_socket.connect(peer_address);
 
   // send: how to send the request, which function
@@ -34,6 +34,7 @@ void get_URL( const string& host, const string& path )
     "GET " + path + " HTTP/1.1\r\n",
     "Host: " + host + "\r\n",
     "Connection: close\r\n",
+    "\r\n",
   };
   tcp_socket.write(std::move(request));
 
